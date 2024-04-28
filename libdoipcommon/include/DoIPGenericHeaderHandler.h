@@ -11,26 +11,24 @@ const unsigned char _UnknownPayloadTypeCode = 0x01;
 const unsigned char _InvalidPayloadLengthCode = 0x04;
 
 enum PayloadType {
-    NEGATIVEACK,
-    ROUTINGACTIVATIONREQUEST,
-    ROUTINGACTIVATIONRESPONSE,
-    VEHICLEIDENTREQUEST,
-    VEHICLEIDENTRESPONSE,
-    DIAGNOSTICMESSAGE,
-    DIAGNOSTICPOSITIVEACK,
-    DIAGNOSTICNEGATIVEACK,
-    ALIVECHECKRESPONSE,
+  NEGATIVEACK,
+  ROUTINGACTIVATIONREQUEST,
+  ROUTINGACTIVATIONRESPONSE,
+  VEHICLEIDENTREQUEST,
+  VEHICLEIDENTRESPONSE,
+  DIAGNOSTICMESSAGE,
+  DIAGNOSTICPOSITIVEACK,
+  DIAGNOSTICNEGATIVEACK,
+  ALIVECHECKRESPONSE,
 };
 
 struct GenericHeaderAction {
-    PayloadType type;
-    unsigned char value;
-    unsigned long payloadLength;
+  PayloadType type;
+  unsigned char value;
+  unsigned long payloadLength;
 };
 
 GenericHeaderAction parseGenericHeader(unsigned char* data, int dataLenght);
 unsigned char* createGenericHeader(PayloadType type, uint32_t length);
 
-
 #endif /* DOIPGENERICHEADERHANDLER_H */
-
