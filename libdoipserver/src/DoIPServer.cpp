@@ -35,7 +35,7 @@ void DoIPServer::setupUdpSocket() {
   serverAddress.sin_port = htons(_ServerPort);
 
   if (server_socket_udp < 0)
-    std::cout << "Error setting up a udp socket" << std::endl;
+    //  std::cout << "Error setting up a udp socket" << std::endl;
 
   // binds the socket to any IP Address and the Port Number 13400
   bind(server_socket_udp, (struct sockaddr*)&serverAddress,
@@ -48,9 +48,9 @@ void DoIPServer::setupUdpSocket() {
 /*
  * Closes the socket for this server
  */
-void DoIPServer::closeTcpSocket() { close(server_socket_tcp); }
+void DoIPServer::closeTcpSocket() { shutdown(server_socket_tcp, SHUT_RDWR); }
 
-void DoIPServer::closeUdpSocket() { close(server_socket_udp); }
+void DoIPServer::closeUdpSocket() { shutdown(server_socket_udp, SHUT_RDWR); }
 
 /*
  * Receives a udp message and calls reactToReceivedUdpMessage method
@@ -199,7 +199,7 @@ void DoIPServer::setMulticastGroup(const char* address) {
                            sizeof(loop));
 
   if (setPort < 0) {
-    std::cout << "Setting Port Error" << std::endl;
+    //  std::cout << "Setting Port Error" << std::endl;
   }
 
   struct ip_mreq mreq;
@@ -212,7 +212,7 @@ void DoIPServer::setMulticastGroup(const char* address) {
                             (char*)&mreq, sizeof(mreq));
 
   if (setGroup < 0) {
-    std::cout << "Setting Address Error" << std::endl;
+    //  std::cout << "Setting Address Error" << std::endl;
   }
 }
 
@@ -225,14 +225,14 @@ int DoIPServer::sendVehicleAnnouncement() {
   int setAddressError = inet_aton(address, &(clientAddress.sin_addr));
 
   if (setAddressError != 0) {
-    std::cout << "Broadcast Address set succesfully" << std::endl;
+    //  std::cout << "Broadcast Address set succesfully" << std::endl;
   }
 
   int socketError = setsockopt(server_socket_udp, SOL_SOCKET, SO_BROADCAST,
                                &broadcast, sizeof(broadcast));
 
   if (socketError == 0) {
-    std::cout << "Broadcast Option set successfully" << std::endl;
+    //  std::cout << "Broadcast Option set successfully" << std::endl;
   }
 
   int sendedmessage;
@@ -246,9 +246,9 @@ int DoIPServer::sendVehicleAnnouncement() {
         (struct sockaddr*)&clientAddress, sizeof(clientAddress));
 
     if (sendedmessage > 0) {
-      std::cout << "Sending Vehicle Announcement" << std::endl;
+      //  std::cout << "Sending Vehicle Announcement" << std::endl;
     } else {
-      std::cout << "Failed Sending Vehicle Announcement" << std::endl;
+      //  std::cout << "Failed Sending Vehicle Announcement" << std::endl;
     }
     usleep(A_DoIP_Announce_Interval * 1000);
   }

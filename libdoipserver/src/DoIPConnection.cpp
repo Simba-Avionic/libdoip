@@ -8,7 +8,7 @@
  * Closes the connection by closing the sockets
  */
 void DoIPConnection::aliveCheckTimeout() {
-  std::cout << "Alive Check Timeout. Close Connection" << std::endl;
+  //  std::cout << "Alive Check Timeout. Close Connection" << std::endl;
   closeSocket();
   close_connection();
 }
@@ -27,19 +27,19 @@ void DoIPConnection::closeSocket() {
  *              or -1 if error occurred
  */
 int DoIPConnection::receiveTcpMessage() {
-  std::cout << "Waiting for DoIP Header..." << std::endl;
+  //  std::cout << "Waiting for DoIP Header..." << std::endl;
   unsigned char genericHeader[_GenericHeaderLength];
   unsigned int readBytes =
       receiveFixedNumberOfBytesFromTCP(_GenericHeaderLength, genericHeader);
   if (readBytes == _GenericHeaderLength && !aliveCheckTimer.timeout) {
-    std::cout << "Received DoIP Header." << std::endl;
+    //  std::cout << "Received DoIP Header." << std::endl;
     GenericHeaderAction doipHeaderAction =
         parseGenericHeader(genericHeader, _GenericHeaderLength);
 
     unsigned char* payload = nullptr;
     if (doipHeaderAction.payloadLength > 0) {
-      std::cout << "Waiting for " << doipHeaderAction.payloadLength
-                << " bytes of payload..." << std::endl;
+      //  std::cout << "Waiting for " << doipHeaderAction.payloadLength
+                // << " bytes of payload..." << std::endl;
       payload = new unsigned char[doipHeaderAction.payloadLength];
       unsigned int receivedPayloadBytes = receiveFixedNumberOfBytesFromTCP(
           doipHeaderAction.payloadLength, payload);
@@ -47,7 +47,7 @@ int DoIPConnection::receiveTcpMessage() {
         closeSocket();
         return 0;
       }
-      std::cout << "DoIP message completely received" << std::endl;
+      //  std::cout << "DoIP message completely received" << std::endl;
     }
 
     // if alive check timouts should be possible, reset timer when message
@@ -103,7 +103,7 @@ unsigned long DoIPConnection::receiveFixedNumberOfBytesFromTCP(
 int DoIPConnection::reactOnReceivedTcpMessage(GenericHeaderAction action,
                                               unsigned long payloadLength,
                                               unsigned char* payload) {
-  std::cout << "processing DoIP message..." << std::endl;
+  //  std::cout << "processing DoIP message..." << std::endl;
   int sentBytes;
   switch (action.type) {
     case PayloadType::NEGATIVEACK: {
@@ -178,8 +178,8 @@ int DoIPConnection::reactOnReceivedTcpMessage(GenericHeaderAction action,
 }
 
 void DoIPConnection::triggerDisconnection() {
-  std::cout << "Application requested to disconnect Client from Server"
-            << std::endl;
+  //  std::cout << "Application requested to disconnect Client from Server"
+            //  << std::endl;
   closeSocket();
 }
 
@@ -216,11 +216,11 @@ void DoIPConnection::setGeneralInactivityTime(uint16_t seconds) {
  */
 void DoIPConnection::sendDiagnosticPayload(unsigned short sourceAddress,
                                            unsigned char* data, int length) {
-  std::cout << "Sending diagnostic data: ";
+  //  std::cout << "Sending diagnostic data: ";
   for (int i = 0; i < length; i++) {
-    std::cout << std::hex << std::setw(2) << (unsigned int)data[i] << " ";
+    //  std::cout << std::hex << std::setw(2) << (unsigned int)data[i] << " ";
   }
-  std::cout << std::endl;
+  //  std::cout << std::endl;
 
   unsigned char* message =
       createDiagnosticMessage(sourceAddress, routedClientAddress, data, length);

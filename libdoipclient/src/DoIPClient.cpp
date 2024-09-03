@@ -9,7 +9,7 @@ void DoIPClient::startTcpConnection() {
   _sockFd = socket(AF_INET, SOCK_STREAM, 0);
 
   if (_sockFd >= 0) {
-    std::cout << "Client TCP-Socket created successfully" << std::endl;
+    //  std::cout << "Client TCP-Socket created successfully" << std::endl;
 
     _serverAddr.sin_family = AF_INET;
     _serverAddr.sin_port = htons(_serverPortNr);
@@ -20,7 +20,7 @@ void DoIPClient::startTcpConnection() {
           connect(_sockFd, (struct sockaddr*)&_serverAddr, sizeof(_serverAddr));
       if (_connected != -1) {
         connectedFlag = true;
-        std::cout << "Connection to server established" << std::endl;
+        //  std::cout << "Connection to server established" << std::endl;
       }
     }
   }
@@ -30,7 +30,7 @@ void DoIPClient::startUdpConnection() {
   _sockFd_udp = socket(AF_INET, SOCK_DGRAM, 0);
 
   if (_sockFd_udp >= 0) {
-    std::cout << "Client-UDP-Socket created successfully" << std::endl;
+    //  std::cout << "Client-UDP-Socket created successfully" << std::endl;
 
     _serverAddr.sin_family = AF_INET;
     _serverAddr.sin_port = htons(_serverPortNr);
@@ -145,7 +145,7 @@ void DoIPClient::receiveMessage() {
     emptyMessageCounter++;
 
     if (emptyMessageCounter == 5) {
-      std::cout << "Received to many empty messages. Reconnect TCP connection"
+      //  std::cout << "Received to many empty messages. Reconnect TCP connection"
                 << std::endl;
       emptyMessageCounter = 0;
       reconnectServer();
@@ -165,13 +165,13 @@ void DoIPClient::receiveMessage() {
       action.type == PayloadType::DIAGNOSTICNEGATIVEACK) {
     switch (action.type) {
       case PayloadType::DIAGNOSTICPOSITIVEACK: {
-        std::cout
+        //  std::cout
             << "Client received diagnostic message positive ack with code: ";
         printf("0x%02X ", _receivedData[12]);
         break;
       }
       case PayloadType::DIAGNOSTICNEGATIVEACK: {
-        std::cout
+        //  std::cout
             << "Client received diagnostic message negative ack with code: ";
         printf("0x%02X ", _receivedData[12]);
         break;
@@ -182,7 +182,7 @@ void DoIPClient::receiveMessage() {
         break;
       }
     }
-    std::cout << std::endl;
+    //  std::cout << std::endl;
   }
 }
 
@@ -226,16 +226,16 @@ void DoIPClient::sendVehicleIdentificationRequest(const char* address) {
   int setAddressError = inet_aton(address, &(_serverAddr.sin_addr));
 
   if (setAddressError != 0) {
-    std::cout << "Address set succesfully" << std::endl;
+    //  std::cout << "Address set succesfully" << std::endl;
   } else {
-    std::cout << "Could not set Address. Try again" << std::endl;
+    //  std::cout << "Could not set Address. Try again" << std::endl;
   }
 
   int socketError = setsockopt(_sockFd_udp, SOL_SOCKET, SO_BROADCAST,
                                &broadcast, sizeof(broadcast));
 
   if (socketError == 0) {
-    std::cout << "Broadcast Option set successfully" << std::endl;
+    //  std::cout << "Broadcast Option set successfully" << std::endl;
   }
 
   const std::pair<int, unsigned char*>* rareqWithLength =
@@ -246,7 +246,7 @@ void DoIPClient::sendVehicleIdentificationRequest(const char* address) {
              (struct sockaddr*)&_serverAddr, sizeof(_serverAddr));
 
   if (sendError > 0) {
-    std::cout << "Sending Vehicle Identification Request" << std::endl;
+    //  std::cout << "Sending Vehicle Identification Request" << std::endl;
   }
 }
 
@@ -304,36 +304,36 @@ void DoIPClient::parseVIResponseInformation(unsigned char* data) {
 
 void DoIPClient::displayVIResponseInformation() {
   // output VIN
-  std::cout << "VIN: ";
+  //  std::cout << "VIN: ";
   for (int i = 0; i < 17; i++) {
-    std::cout << (unsigned char)(int)VINResult[i];
+    //  std::cout << (unsigned char)(int)VINResult[i];
   }
-  std::cout << std::endl;
+  //  std::cout << std::endl;
 
   // output LogicalAddress
-  std::cout << "LogicalAddress: ";
+  //  std::cout << "LogicalAddress: ";
   for (int i = 0; i < 2; i++) {
     printf("%02X", (int)LogicalAddressResult[i]);
   }
-  std::cout << std::endl;
+  //  std::cout << std::endl;
 
   // output EID
-  std::cout << "EID: ";
+  //  std::cout << "EID: ";
   for (int i = 0; i < 6; i++) {
     printf("%02X", EIDResult[i]);
   }
-  std::cout << std::endl;
+  //  std::cout << std::endl;
 
   // output GID
-  std::cout << "GID: ";
+  //  std::cout << "GID: ";
   for (int i = 0; i < 6; i++) {
     printf("%02X", (int)GIDResult[i]);
   }
-  std::cout << std::endl;
+  //  std::cout << std::endl;
 
   // output FurtherActionRequest
-  std::cout << "FurtherActionRequest: ";
+  //  std::cout << "FurtherActionRequest: ";
   printf("%02X", (int)FurtherActionReqResult);
 
-  std::cout << std::endl;
+  //  std::cout << std::endl;
 }
